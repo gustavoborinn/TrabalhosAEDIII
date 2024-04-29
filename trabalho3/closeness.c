@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <limits.h>
 
-#define MAX_VERTICES 100
+#define MAX_VERTICES 75
 
 // Estrutura de dados para o grafo
 typedef struct {
@@ -52,15 +52,26 @@ void dijkstra(const Grafo *grafo, int origem, int *distancias) {
     }
 }
 
-// Cálculo de closeness
-float closeness(const Grafo *grafo, int vertice) {
-    int distancias[MAX_VERTICES];
-    dijkstra(grafo, vertice, distancias);
-    int soma_distancias = 0;
-    for (int i = 0; i < grafo->num_vertices; i++) {
-        soma_distancias += distancias[i];
+void calcular_closeness(const Grafo *grafo) {
+    FILE *fp;
+    fp = fopen("centralidade.txt", "w");
+    if (fp == NULL) {
+        printf("Erro ao criar o arquivo.\n");
+        exit(1);
     }
-    return (float)soma_distancias / (grafo->num_vertices - 1);
+
+    for (int v = 0; v < grafo->num_vertices; v++) {
+        int distancias[MAX_VERTICES];
+        dijkstra(grafo, v, distancias);
+        int soma_distancias = 0;
+        for (int i = 0; i < grafo->num_vertices; i++) {
+            soma_distancias += distancias[i];
+        }
+        float closeness = (float)soma_distancias / (grafo->num_vertices - 1);
+        fprintf(fp, "%f\n", closeness);
+    }
+
+    fclose(fp);
 }
 
 // Função para desenhar o grafo
@@ -103,12 +114,12 @@ int main() {
     adicionar_aresta(&grafo, 1, 3, 3);
     adicionar_aresta(&grafo, 2, 4, 7);
 
-    // Teste do cálculo de closeness
-    float closeness_value = closeness(&grafo, 2);
-    printf("Closeness do vértice 0: %f\n", closeness_value);
+    // Calcula a centralidade de closeness para todos os vértices
+    calcular_closeness(&grafo);
 
-    // Teste do desenho do grafo
+    // Desenha o grafo
     desenhar_grafo(grafo.matriz_adj, grafo.num_vertices);
 
     return 0;
 }
+
