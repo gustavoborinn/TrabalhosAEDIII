@@ -1,3 +1,17 @@
+/*+-------------------------------------------------------------+
+ | UNIFAL – Universidade Federal de Alfenas.                    |
+ | BACHARELADO EM CIÊNCIA DA COMPUTAÇÃO.                        |
+ | Trabalho..: Algoritmo em Grafos                              |
+ | Disciplina: Algoritmos e Estrutura de Dados III              |
+ | Professor.: Iago                                             |
+ | Aluno(s)..: Gustavo Benfica Paulino                          |
+ | Gustavo Borin Nascimento                                     |
+ | Lucas Gabriel da Silva Batista                               |
+ | Maria Luiza Alves Belarmino                                  |
+ | Vinícius Gomes                                               |
+ | Data......: 30/04/2024                                       |
+ +-------------------------------------------------------------+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
