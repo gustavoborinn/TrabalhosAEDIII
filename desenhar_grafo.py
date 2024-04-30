@@ -24,7 +24,7 @@ def desenhar_grafo(matriz_adj):
     cmap = mcolors.LinearSegmentedColormap.from_list("mycmap", ['red', 'blue'])
 
     # Desenha o grafo
-    pos = nx.spring_layout(G)  # Define a posição dos nós
+    pos = nx.spring_layout(G, k=3)  # Define a posição dos nós com um valor maior de k
     nx.draw(G, pos, node_color=cores, cmap=cmap, with_labels=True)  # Desenha os nós com a cor correspondente
     labels = nx.get_edge_attributes(G, 'weight')  # Obtém os pesos das arestas
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)  # Desenha os pesos das arestas
