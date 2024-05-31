@@ -12,11 +12,8 @@
  | Data......: 05/06/2024                                       |
  +-------------------------------------------------------------+*/
 
-<<<<<<< HEAD:trabalho4/comparacaoMaxSAT.c
 // Problema MAX-SAT (Satisfatibilidade Máxima)
 
-=======
->>>>>>> 375a861207d4d94489db749574f4e9e8dd6f93a3:comparacaoMaxSAT.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
