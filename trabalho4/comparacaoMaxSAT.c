@@ -1,24 +1,40 @@
+/*+-------------------------------------------------------------+
+ | UNIFAL – Universidade Federal de Alfenas.                    |
+ | BACHARELADO EM CIÊNCIA DA COMPUTAÇÃO.                        |
+ | Trabalho..: Algoritmo em Grafos                              |
+ | Disciplina: Algoritmos e Estrutura de Dados III              |
+ | Professor.: Iago Augusto de Carvalho                         |
+ | Aluno(s)..: Gustavo Benfica Paulino                          |
+ | Gustavo Borin Nascimento                                     |
+ | Lucas Gabriel da Silva Batista                               |
+ | Maria Luiza Alves Belarmino                                  |
+ | Vinícius Gomes                                               |
+ | Data......: 05/06/2024                                       |
+ +-------------------------------------------------------------+*/
+
+// Problema MAX-SAT (Satisfatibilidade Máxima)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
 
 // Definições de parâmetros
-#define MAX_VARS 25
-#define MAX_CLAUSES 100
-#define POP_SIZE 50
-#define GENERATIONS 50
-#define MUTATION_RATE 0.01
+#define MAX_VAR_CLAU 25
+#define MAX_CLAUSULAS 100
+#define TAM_POPULACAO 50
+#define GERACOES 50
+#define TAXA_MUTACAO 0.01
 
 // Estrutura para representar uma cláusula
 typedef struct {
-    int literais[MAX_VARS];
+    int literais[MAX_VAR_CLAU];
     int tamanho;
 } Clausula;
 
 // Estrutura para representar um indivíduo (solução)
 typedef struct {
-    bool genes[MAX_VARS];
+    bool genes[MAX_VAR_CLAU];
     int fitness;
 } Individuo;
 
@@ -44,7 +60,7 @@ int avaliar_solucao(bool solucao[], Clausula clausulas[], int num_clausulas) {
 
 // Algoritmo Hill Climbing
 void busca_local(Clausula clausulas[], int num_vars, int num_clausulas, bool melhor_solucao[], int *melhor_score) {
-    bool solucao[MAX_VARS];
+    bool solucao[MAX_VAR_CLAU];
     for (int i = 0; i < num_vars; i++) {
         solucao[i] = rand() % 2;
     }
@@ -75,7 +91,7 @@ void busca_local(Clausula clausulas[], int num_vars, int num_clausulas, bool mel
 
 // Função para inicializar a população no algoritmo genético
 void inicializar_populacao(Individuo populacao[], int num_vars) {
-    for (int i = 0; i < POP_SIZE; i++) {
+    for (int i = 0; i < TAM_POPULACAO; i++) {
         for (int j = 0; j < num_vars; j++) {
             populacao[i].genes[j] = rand() % 2;
         }
@@ -84,15 +100,15 @@ void inicializar_populacao(Individuo populacao[], int num_vars) {
 
 // Função para avaliar a população no algoritmo genético
 void avaliar_populacao(Individuo populacao[], Clausula clausulas[], int num_clausulas) {
-    for (int i = 0; i < POP_SIZE; i++) {
+    for (int i = 0; i < TAM_POPULACAO; i++) {
         populacao[i].fitness = avaliar_solucao(populacao[i].genes, clausulas, num_clausulas);
     }
 }
 
 // Função para selecionar os pais no algoritmo genético
 void selecionar_pais(Individuo populacao[], Individuo *pai1, Individuo *pai2) {
-    *pai1 = populacao[rand() % POP_SIZE];
-    *pai2 = populacao[rand() % POP_SIZE];
+    *pai1 = populacao[rand() % TAM_POPULACAO];
+    *pai2 = populacao[rand() % TAM_POPULACAO];
 }
 
 // Função de crossover no algoritmo genético
@@ -111,7 +127,7 @@ void crossover(Individuo pai1, Individuo pai2, Individuo *filho1, Individuo *fil
 // Função de mutação no algoritmo genético
 void mutar(Individuo *individuo, int num_vars) {
     for (int i = 0; i < num_vars; i++) {
-        if ((rand() % 100) < (MUTATION_RATE * 100)) {
+        if ((rand() % 100) < (TAXA_MUTACAO * 100)) {
             individuo->genes[i] = !individuo->genes[i];
         }
     }
@@ -119,16 +135,16 @@ void mutar(Individuo *individuo, int num_vars) {
 
 // Algoritmo Genético
 void algoritmo_genetico(Clausula clausulas[], int num_vars, int num_clausulas, bool melhor_solucao[], int *melhor_score) {
-    Individuo populacao[POP_SIZE];
-    Individuo nova_populacao[POP_SIZE];
+    Individuo populacao[TAM_POPULACAO];
+    Individuo nova_populacao[TAM_POPULACAO];
 
     inicializar_populacao(populacao, num_vars);
     avaliar_populacao(populacao, clausulas, num_clausulas);
 
     *melhor_score = 0;
 
-    for (int geracao = 0; geracao < GENERATIONS; geracao++) {
-        for (int i = 0; i < POP_SIZE; i += 2) {
+    for (int geracao = 0; geracao < GERACOES; geracao++) {
+        for (int i = 0; i < TAM_POPULACAO; i += 2) {
             Individuo pai1, pai2, filho1, filho2;
             selecionar_pais(populacao, &pai1, &pai2);
             crossover(pai1, pai2, &filho1, &filho2, num_vars);
@@ -138,13 +154,13 @@ void algoritmo_genetico(Clausula clausulas[], int num_vars, int num_clausulas, b
             nova_populacao[i + 1] = filho2;
         }
 
-        for (int i = 0; i < POP_SIZE; i++) {
+        for (int i = 0; i < TAM_POPULACAO; i++) {
             populacao[i] = nova_populacao[i];
         }
 
         avaliar_populacao(populacao, clausulas, num_clausulas);
 
-        for (int i = 0; i < POP_SIZE; i++) {
+        for (int i = 0; i < TAM_POPULACAO; i++) {
             if (populacao[i].fitness > *melhor_score) {
                 *melhor_score = populacao[i].fitness;
                 for (int j = 0; j < num_vars; j++) {
@@ -165,14 +181,14 @@ void imprimir_solucao(bool solucao[], int num_vars) {
 
 // Função para executar uma instância de teste
 void executar_instancia(Clausula clausulas[], int num_vars, int num_clausulas) {
-    bool melhor_solucao_bl[MAX_VARS];
+    bool melhor_solucao_bl[MAX_VAR_CLAU];
     int melhor_score_bl;
     clock_t inicio_bl = clock();
     busca_local(clausulas, num_vars, num_clausulas, melhor_solucao_bl, &melhor_score_bl);
     clock_t fim_bl = clock();
     double tempo_bl = (double)(fim_bl - inicio_bl) / CLOCKS_PER_SEC;
 
-    bool melhor_solucao_ag[MAX_VARS];
+    bool melhor_solucao_ag[MAX_VAR_CLAU];
     int melhor_score_ag;
     clock_t inicio_ag = clock();
     algoritmo_genetico(clausulas, num_vars, num_clausulas, melhor_solucao_ag, &melhor_score_ag);
@@ -194,7 +210,7 @@ int main() {
     srand(time(NULL));
 
     // Definir 10 diferentes instâncias
-    Clausula instancias[10][MAX_CLAUSES] = {
+    Clausula instancias[10][MAX_CLAUSULAS] = {
         // Instância 1: 5 variáveis, 3 cláusulas
         {
             {{1, -2, 3}, 3},
@@ -369,9 +385,9 @@ int main() {
     int num_clauses[10] = {3, 5, 8, 10, 12, 15, 18, 20, 22, 25};
 
     for (int i = 0; i < 10; i++) {
-        printf("_____________________________________________________________________________\n");
         printf("Instância %d:\n", i + 1);
         executar_instancia(instancias[i], num_vars[i], num_clauses[i]);
+        printf("_____________________________________________________________________________\n");
         printf("\n");
     }
 
