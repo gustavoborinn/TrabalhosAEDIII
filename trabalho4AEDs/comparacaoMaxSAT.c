@@ -197,7 +197,7 @@ void executar_instancia(Clausula clausulas[], int num_vars, int num_clausulas) {
 
     printf("%-20s %-20s %-20s\n", "Algoritmo", "Melhor Pontuação", "Tempo (segundos)");
     printf("------------------------------------------------------------\n");
-    printf("%-20s %-20d %-20.4f\n", "[Busca Local]", melhor_score_bl, tempo_bl);
+    printf("%-20s %-20d %-20.4f\n", "[Hill Climbing]", melhor_score_bl, tempo_bl);
     printf("%-20s", "Melhor Solução: ");
     imprimir_solucao(melhor_solucao_bl, num_vars);
 
